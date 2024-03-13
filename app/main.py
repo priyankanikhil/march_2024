@@ -36,8 +36,8 @@ else:
 
 @app.route('/oauth2callback')
 def oauth2callback():
-    flow = Flow.from_client_secrets_file(
-        'client_secret.json', scopes=SCOPES,
+    flow = Flow.from_client_config(
+        client_secret_dict, scopes=SCOPES,
         redirect_uri=os.getenv('AUTH_REDIRECT_URI')
     )
     print("flow",request.args)
