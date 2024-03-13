@@ -4,7 +4,7 @@ from google_auth_oauthlib.flow import Flow
 from googleapiclient.discovery import build
 import os
 import datetime
-from calendar_service import calendar_bp
+from app.calendar_service import calendar_bp
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
