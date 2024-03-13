@@ -1,3 +1,4 @@
+import json
 from flask import Flask, redirect, url_for, session, request, jsonify
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import Flow
@@ -23,6 +24,15 @@ def index():
     events_result = service.events().list(calendarId='primary', timeMin=datetime.datetime.utcnow().isoformat() + 'Z', maxResults=10, singleEvents=True, orderBy='startTime').execute()
     events = events_result.get('items', [])
     return jsonify(events)
+
+
+# Load client secrets from environment variable
+client_secret_json = os.getenv('CLIENT_SECRET_JSON')
+
+if client_secret_json:
+    client_secret_dict = json.loads(client_secret_json)
+else:
+    raise ValueError("CLIENT_SECRET_JSON environment variable is not set or empty.")
 
 @app.route('/oauth2callback')
 def oauth2callback():
