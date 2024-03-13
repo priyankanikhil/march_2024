@@ -5,6 +5,8 @@ from googleapiclient.discovery import build
 import os
 import datetime
 from app.calendar_service import calendar_bp
+import gevent.monkey
+gevent.monkey.patch_all()
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
