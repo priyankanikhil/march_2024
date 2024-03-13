@@ -18,7 +18,7 @@ app.register_blueprint(calendar_bp, url_prefix='/api')
 @app.route('/')
 def index():
     if 'credentials' not in session:
-        return redirect(url_for('oauth2callback'))
+        return redirect(os.getenv('AUTH_REDIRECT_URI'))
     credentials = Credentials(**session['credentials'])
     service = build('calendar', 'v3', credentials=credentials)
     events_result = service.events().list(calendarId='primary', timeMin=datetime.datetime.utcnow().isoformat() + 'Z', maxResults=10, singleEvents=True, orderBy='startTime').execute()
@@ -38,7 +38,7 @@ else:
 def oauth2callback():
     flow = Flow.from_client_secrets_file(
         'client_secret.json', scopes=SCOPES,
-        redirect_uri=url_for('oauth2callback', _external=True)
+        redirect_uri=os.getenv('AUTH_REDIRECT_URI')
     )
     print("flow",request.args)
     if 'code' not in request.args:
@@ -54,7 +54,7 @@ def oauth2callback():
 @app.route('/add_event', methods=['POST'])
 def add_event():
     if 'credentials' not in session:
-        return redirect(url_for('oauth2callback'))
+        return redirect(os.getenv('AUTH_REDIRECT_URI'))
     credentials = Credentials(**session['credentials'])
     service = build('calendar', 'v3', credentials=credentials)
     event = {
